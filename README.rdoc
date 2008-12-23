@@ -9,12 +9,13 @@ Anyss is a very basic wrapper for gnumeric's ssconvert binary.
 == FEATURES:
 
 * conversion of *.ods, *.gnumeric & *.xls to csv file
-* iteration through each row of the spreadsheet
+* supports overriding of insensible file extension
+* iteration through each row of the spreadsheet, or returning a string reader
 
 == PROBLEMS:
 
 * only works with system with newer versions of gnumeric that provides 
-  the ssconvert binary (i'm using gnumeric 1.8.3 when anyss is conceived)
+  the ssconvert binary (testings done on gnumeric-1.8.3)
 
 == SYNOPSIS:
 
@@ -25,11 +26,20 @@ Anyss is a very basic wrapper for gnumeric's ssconvert binary.
   Anyss.to_csv( in, out ) # generates 'plants.csv' from 'plants.ods'
   Anyss.to_csv( in )      # generates 'plants.ods.csv' from 'plants.ods'
 
-  # supports working with *.csv, *.ods, *.gnumeric and *.xls.
+  # applies strategy to each row in *.ods, *.gnumeric, *.xls or *.csv
   Anyss('fruits.ods') do |row|
     name, color, smell = row
     puts "The color of #{name} is #{color}, and it smells like #{smell} !!"
   end
+
+  # returns instance of Anyss::StringReader
+  reader = Anyss('fruits.ods')  
+  reader.each { |row| ... }
+
+  # overriding insensible file extension, and generating 'plants.foo.csv' 
+  # from 'plants.foo'
+  Anyss.to_csv( 'plants.foo', :type => :ods ) 
+  Anyss( 'fruits.foo', :type => :ods ) { |row| ... }
 
 == REQUIREMENTS:
 
